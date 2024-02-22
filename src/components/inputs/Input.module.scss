@@ -1,0 +1,24 @@
+@import '../../styles/variables';
+
+.component {
+    display: flex;
+    flex-direction: column;
+}
+
+.label {
+    color: $main-text-color-softer;
+    padding: 0 0 8px 4px;
+}
+
+.input {
+    background-color: $main-background-contrast;
+    padding: 12px 16px;
+    border-radius: 4px;
+    border: none;
+    font-size: 16px;
+    color: $main-text-color-soft;
+    letter-spacing: 2px;
+    &:focus {
+        outline: none;
+    }
+}

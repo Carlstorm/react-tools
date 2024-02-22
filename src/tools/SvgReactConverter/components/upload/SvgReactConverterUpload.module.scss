@@ -1,0 +1,75 @@
+@import '../../../../styles/variables';
+
+.upload {
+    display: flex;
+    justify-content: center;
+    flex: 1;
+
+    &_container {
+        padding-top: 64px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 32px;
+
+        & > textarea {
+            overflow: hidden;
+            border-radius: 8px;
+            background-color: $main-background-contrast;
+            border: none;
+            width: calc(100% - 32px);
+            height: 112px;
+            color: $main-text-color-soft;
+            padding: 8px 16px;
+            resize: none;
+            &:focus {
+                outline: solid 2px $main-background-contrast-lighter;
+            }
+        }
+    }
+
+    &_drop {
+        border: dashed 2px $main-background-contrast-lighter;
+        border-radius: 8px;
+        background: $main-background-contrast;
+        max-width: 100%;
+        width: 600px;
+        aspect-ratio: 5/3;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    &_actions {
+        gap: 24px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        & > p {
+            text-align: center;
+            font-weight: bold;
+            font-size: 24px;
+        }
+    }
+}
+
+.error {
+    color: $error-color;
+}
+
+.Or {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    & > div {
+        width: 32px;
+        height: 1px;
+        background-color: $main-background-contrast-lighter;
+    }
+    & > span {
+        color: $main-background-contrast-lighter;
+        font-size: 12px;
+        font-weight: bold;
+        transform: translate(0px, -1px);
+    }
+}

@@ -1,19 +1,58 @@
 @import '../../styles/mixins';
+@import '../../styles/variables';
 
 .component {
     height: 100%;
     width: 100%;
+    background-color: $main-background-color;
+}
 
-    @include breakpoint(">desktop") {
-        background: white;
+.grid {
+    grid-gap: 8px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-template-rows: minmax(100px, auto);
+    grid-auto-flow: dense;
+
+    &_item {
+        background-color: #2e2e30;
+        box-shadow: 1px 1px 2px 0px rgba(0, 0, 0, 0.1);
+        display: flex;
+        gap: 16px;
+        align-items: center;
+        justify-content: center;
+        padding: 32px;
+        cursor: pointer;
+        color: $main-text-color-soft;
+        fill: $main-text-color-soft;
+        flex-direction: column;
+        text-align: center;
+        &:hover {
+            background-color: $main-background-contrast;
+            color: $primary-color;
+            fill: $primary-color;
+        }
+        & > span {
+            font-size: 18px;
+            font-weight: bold;
+        }
+        & > svg {
+            height: 32px;
+        }
+        &_focus {
+            @extend .grid_item;
+            background-color: $main-background-contrast;
+            color: $primary-color;
+            fill: $primary-color;
+            outline: dotted 1px $primary-color;
+        }
+        &_hidden {
+            @extend .grid_item;
+            opacity: 0;
+        }
     }
-    @include breakpoint("<desktop") {
-        background: green;
-    }
-    @include breakpoint("<tablet") {
-        background: blue;
-    }
-    @include breakpoint("<phone") {
-        background: red;
-    }
+}
+
+.hiddenElm {
+    padding: 32px;
 }

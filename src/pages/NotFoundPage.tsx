@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import { ROUTES } from '../resources/routes-constants'
 
@@ -14,9 +14,7 @@ const NotFoundPage: React.FC = () => {
     return (
         <div>
             <h1>Oops 404!</h1>
-            <span onClick={() => event.redirectToHomePage()}>
-                Homepage
-            </span>
+            <span onClick={() => event.redirectToHomePage()}>Homepage</span>
         </div>
     )
 }

@@ -1,0 +1,59 @@
+@import '../../../../styles/mixins';
+
+
+.component {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    align-items: center;
+    &_code {
+        width: 100%;
+        background-color: #1b1b1c;
+        height: 600px;
+        box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1490196078);
+        border-radius: 8px;
+        overflow: hidden;
+        display: flex;
+    }
+}
+
+.code_split {
+    min-width: 4px;
+    height: 100%;
+    background: #27272b;
+}
+
+.CodeBox {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    @include scrollBar("alt", black);
+
+    &_title {
+        background: #27272b;
+        padding: 8px 16px;
+        display: flex;
+        justify-content: space-between;
+        &_copy {
+            opacity: 0.4;
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            cursor: pointer;
+            &:hover {
+                opacity: 1;
+                color: $primary-color;
+                fill: $primary-color !important;
+            }
+            &>svg {
+                height: 18px;
+            }
+        }
+    }
+    &_content {
+        padding: 24px;
+        height: 100%;
+        overflow: auto;
+    }
+}

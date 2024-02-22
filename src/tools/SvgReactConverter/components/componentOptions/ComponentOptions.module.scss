@@ -1,0 +1,21 @@
+@import '../../../../styles/variables';
+
+.component {
+    min-height: 500px;
+    min-width: 500px;
+    display: flex;
+    gap: 24px;
+    flex-direction: column;
+}
+
+.export_options {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.export_heading {
+    color: $main-text-color-soft;
+    border-bottom: solid 1px $main-background-contrast;
+    padding-bottom: 10px;
+}

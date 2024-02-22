@@ -1,0 +1,36 @@
+@import '../../styles/variables';
+
+.component {
+    height: 94px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.search_input {
+    background: none;
+    border: none;
+    background-color: $main-background-contrast;
+    border-radius: 20px;
+    color: white;
+    font-size: 16px;
+    padding: 10px 20px;
+    &:focus {
+        border: none;
+        outline: none;
+    }
+}
+
+.back_arrow {
+    position: absolute;
+    height: 34px;
+    left: 16px;
+    top: 14px;
+    stroke: none;
+    fill: $main-text-color-softest;
+    &:hover {
+        fill: $main-text-color;
+        cursor: pointer;
+    }
+}

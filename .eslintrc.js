@@ -16,7 +16,7 @@ module.exports = {
         jest: true
     },
     rules: {
-        "no-control-regex": 0,
+        'no-control-regex': 0,
         'no-undef': 0,
         'no-unused-vars': 'off',
         'react/prop-types': 0,

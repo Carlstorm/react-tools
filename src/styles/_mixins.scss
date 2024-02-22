@@ -1,29 +1,78 @@
 @import './_variables';
 
+@mixin scrollBar($class, $color) {
+    @if $class == 'default' {
+        /* width */
+        ::-webkit-scrollbar {
+            width: 14px;
+        }
+        
+        /* Track */
+        ::-webkit-scrollbar-track {
+            background: $main-background-contrast-darker;
+        }
+        
+        /* Handle */
+        ::-webkit-scrollbar-thumb {
+            background: $main-background-contrast;
+            cursor: pointer;
+        }
+        
+        /* Handle on hover */
+        ::-webkit-scrollbar-thumb:hover {
+            background: $color;
+        }
+    }
 
-@mixin breakpoint($class) {
-  @if $class == '<phone' {
-    @media (max-width: $phone-size) {
-      @content;
+    @if $class == 'alt' {   
+        /* width */
+        ::-webkit-scrollbar {
+            width: 20px;
+        }
+        
+        /* Track */
+        ::-webkit-scrollbar-track {
+            border: solid 3px transparent;
+        }
+        
+        /* Handle */
+        ::-webkit-scrollbar-thumb {
+            border-radius: 12px;
+            box-shadow: inset 0 0 10px 10px #27272b;
+            border: solid 6px transparent;
+            background: none;
+        }
+        
+        /* Handle on hover */
+        ::-webkit-scrollbar-thumb:hover {
+            box-shadow: inset 0 0 10px 10px $primary-color;
+            background: none;
+        }
     }
-  }
-      
-  @if $class == '<tablet' {
-    @media (max-width: $tablet-size) {
-      @content;
-    }
-  }
-
-  @if $class == '<desktop' {
-    @media (max-width: $desktop-size) {
-      @content;
-    }
-
-  }
-  @if $class == '>desktop' {
-    @media (min-width: $desktop-size) {
-      @content;
-    }
-  }
+ 
 }
 
+@mixin breakpoint($class) {
+    @if $class == '<phone' {
+        @media (max-width: $phone-size) {
+            @content;
+        }
+    }
+
+    @if $class == '<tablet' {
+        @media (max-width: $tablet-size) {
+            @content;
+        }
+    }
+
+    @if $class == '<desktop' {
+        @media (max-width: $desktop-size) {
+            @content;
+        }
+    }
+    @if $class == '>desktop' {
+        @media (min-width: $desktop-size) {
+            @content;
+        }
+    }
+}

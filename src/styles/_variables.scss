@@ -1,10 +1,19 @@
 // colors
-$aqua: #7fdbff;
-$main-text-color: black;
-$main-background-color: white;
+$main-text-color: #c2c2cf;
+$main-text-color-soft: #a5a5b1;
+$main-text-color-softer: rgb(132, 132, 143);
+$main-text-color-softest: rgb(97, 97, 105);
+$main-background-color: #242425;
+$main-background-contrast: #2e2e30;
+$main-background-contrast-darker: #1b1b1c;
+$main-background-contrast-lighter: #4b4b4b;
+$main-background-contrast-lightest: #c9c9d6;
+$primary-color: palevioletred;
+$error-color: rgb(211, 67, 79);
 
 // text
-$main-text-size: 12px;
+$main-text-size: 16px;
+$main-text-size-big: 24px;
 
 $phone-size: 600px;
 $tablet-size: 992px;

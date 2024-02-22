@@ -1,0 +1,24 @@
+@import '../../styles/variables';
+
+.component {
+    border: none;
+    padding: 6px 24px 8px 24px;
+    background: none;
+    border-width: 2px;
+    border-style: solid;
+    border-color: $main-text-color;
+    border-radius: 8px;
+    color: $main-text-color;
+    font-weight: bold;
+    font-size: 14px;
+    width: max-content;
+    &:focus {
+        outline: none;
+        border-color: $primary-color;
+    }
+    &:hover {
+        border-color: $primary-color;
+        color: $primary-color;
+        cursor: pointer;
+    }
+}

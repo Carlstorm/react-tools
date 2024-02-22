@@ -1,3 +1,4 @@
 export const ROUTES = {
-    HOMEPAGE_ROUTE: '/'
+    HOMEPAGE_ROUTE: '/',
+    SVG_REACT_CONVERTER: '/svg-react-converter'
 }

@@ -1,0 +1,113 @@
+@import '../../../../styles/variables';
+
+$item-max-width-height: 112px;
+
+.component {
+    background-color: $main-background-contrast-darker;
+    height: max-content;
+    padding: 64px 24px;
+    border-radius: 8px;
+    position: relative;
+    box-shadow: inset 0 0 10px #00000026;
+    &_content {
+        gap: 24px;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: flex-start;
+    }
+}
+
+.item {
+    // border-radius: 8px;
+    background: $main-background-contrast-lightest;
+    border: dashed 2px $main-background-contrast;
+    outline: $main-background-contrast-lightest 4px solid;
+    box-shadow: 1px 1px 12px 4px rgba(0, 0, 0, 0.548);
+    transition: 0.1s ease-in-out;
+    position: relative;
+    display: flex;
+    &>svg:nth-child(2) {
+        pointer-events: none;
+    }
+    &_svg_horizontal {
+        height: $item-max-width-height;
+    }
+
+    &_svg_vertical {
+        width: $item-max-width-height;
+    }
+    
+    &_selected {
+        border: solid 2px $main-background-contrast;
+        outline: $primary-color 4px solid;
+        background: white;
+        box-shadow: 1px 1px 12px 6px rgba(0, 0, 0, 0.548);
+        &>svg:nth-child(1) {
+            stroke: $primary-color;
+        }
+        &:hover {
+            outline: $primary-color 4px solid !important;
+        }
+    }
+    &:hover {
+        &>svg:nth-child(1) {
+            opacity: 1;
+        }
+
+        cursor: pointer;
+        transform: scale(1.05);
+        box-shadow: 2px 2px 24px 5px rgba(0, 0, 0, 1);
+        background: white;
+        outline: white 4px solid;
+    }
+}
+
+.drop_message {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    top: 50%;
+    left: 50%;
+    text-align: center;
+    font-weight: bold;
+    font-size: 24px;
+}
+
+.upload_more {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 8px 16px;
+    font-size: 14px;
+    font-style: italic;
+    color: $main-text-color-softest;
+    opacity: 0.75;
+    letter-spacing: 1px;
+    &_link {
+        font-weight: bold;
+        opacity: 0.5;
+        padding: 0;
+        color: $primary-color;
+        cursor: pointer;
+        &:hover {
+            opacity: 1;
+        }
+    }
+}
+
+.remove_item {
+    transition: opacity 0.14s;
+    opacity: 0;
+    fill: none;
+    stroke: $main-background-contrast-lighter;
+    fill: white;
+    position: absolute;
+    top: 0;
+    height: 36px;
+    right: 0;
+    transform: translate(50%, -50%);
+    &:hover {
+        stroke: white !important;
+        fill: $error-color !important;
+    }
+}
