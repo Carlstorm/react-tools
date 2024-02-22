@@ -9,7 +9,9 @@ class FormatFunctions {
 
         const resturcturedSVGObjs: any[] = fixStyleElm.map((svgObj: any) => this.cleanSvgStructure(svgObj))
 
-        const removeUselessElements: any[] = this.removeUselessElements(resturcturedSVGObjs)
+        const limitProperties: any[] = this.limitProperties(resturcturedSVGObjs) 
+
+        const removeUselessElements: any[] = this.removeUselessElements(limitProperties)
 
         const popProplessParents: any[] = this.popProplessParents(removeUselessElements)
 
@@ -78,6 +80,35 @@ class FormatFunctions {
         return svgobj
     }
 
+    limitProperties(svgobjs: any[]) {
+        // Object.keys(svgobj).forEach((objKey) => {
+        //     if (['$'].includes(objKey)) {
+        //         Object.keys(svgobj['$']).forEach(propKey => {
+        //             if (['id', 'serif:id'].includes(propKey)) {
+        //                 delete svgobj['$'][propKey]
+        //             }
+        //         })
+        //     } else if (objKey === 'children' && 'children' in svgobj) {
+        //         svgobj[objKey] = svgobj[objKey].map((childObj: any) => this.limitProperties(childObj))
+        //     }
+        // })
+        // return svgobj
+
+        const newArray: any[] = []
+        svgobjs.forEach((svgObj) => {
+            if ('children' in svgObj) svgObj.children = this.limitProperties(svgObj.children)
+
+            if ('$' in svgObj && Object.keys(svgObj['$']).length > 0) {
+                Object.keys(svgObj['$']).forEach(propKey => {
+                    if (['id', 'serif:id', "xmlns:serif"].includes(propKey)) {
+                        delete svgObj['$'][propKey]
+                    }
+                })
+            }
+            newArray.push(svgObj)
+        })
+        return newArray
+    }
     
     removeUselessElements(svgobjs: any[]) {
         const newArray: any[] = []

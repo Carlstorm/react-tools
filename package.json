@@ -58,7 +58,6 @@
         "@types/xml2js": "^0.4.13",
         "typescript": "^5.2.2"
     },
-    "homepage": ".",
     "postcss": {
         "plugins": {
             "autoprefixer": {}

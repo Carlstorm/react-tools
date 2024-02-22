@@ -554,7 +554,9 @@ class SvgFormatHandler implements SvgFormatHandler {
         const finalSvgString =
             formattedSvgString.substring(0, styleStartIndex) + '\n' + formattedCssString + indentedStyleEndTag + formattedSvgString.substring(styleEndIndex)
 
-        return finalSvgString
+        return `<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+${finalSvgString}
+        `
     }
 
     createSvgReact(selected: number, type: string, style: string) {
