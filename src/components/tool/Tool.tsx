@@ -1,6 +1,7 @@
 import React, { PropsWithChildren, useEffect } from 'react'
 import Page from '../page/Page'
 import { useNavigate } from 'react-router-dom'
+import { ROUTES } from '../../resources/routes-constants'
 
 type Event = {
     keyBinds: (ev: KeyboardEvent) => void
@@ -18,7 +19,7 @@ const Tool: React.FC<PropsWithChildren> = ({ children }) => {
 
     const event: Event = {
         keyBinds: (ev) => {
-            if (ev.key === 'Escape') navigate('/')
+            if (ev.key === 'Escape') navigate(ROUTES.HOMEPAGE_ROUTE)
         }
     }
 
