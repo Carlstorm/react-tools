@@ -1,6 +1,7 @@
 {
     "name": "react-tools",
     "version": "0.1.0",
+    "homepage": "https://carlstorm.github.io/react_tools/",
     "private": true,
     "dependencies": {
         "@reduxjs/toolkit": "^1.9.7",
@@ -9,6 +10,7 @@
         "@testing-library/user-event": "^14.5.1",
         "buffer": "^6.0.3",
         "eslint-plugin-prettier": "^5.0.1",
+        "gh-pages": "^6.1.1",
         "js-beautify": "^1.14.11",
         "jszip": "^3.10.1",
         "npm": "^10.4.0",
@@ -26,6 +28,8 @@
         "xml2js": "^0.6.2"
     },
     "scripts": {
+        "predeploy": "npm run build",
+        "deploy": "gh-pages -d build",
         "start": "react-scripts start",
         "build": "react-scripts build",
         "test": "react-scripts test",

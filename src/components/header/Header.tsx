@@ -7,6 +7,7 @@ import { setSearchMode, setSearchString } from '../../store/actions/data'
 import { useLocation, useNavigate } from 'react-router-dom'
 import CrossSvg from '../../resources/svgs/CrossSvg/CrossSvg'
 import HomeSvg from '../../resources/svgs/HomeSvg/HomeSvg'
+import { ROUTES } from '../../resources/routes-constants'
 
 type Event = {
     search: (ev: FormEvent<HTMLInputElement>) => void
@@ -45,7 +46,7 @@ const Header: React.FC = () => {
     return (
         <div className={style.component}>
             {location.pathname === "/" ? null :
-                <HomeSvg className={style.back_arrow} onClick={() => navigate("/")} />
+                <HomeSvg className={style.back_arrow} onClick={() => navigate(ROUTES.HOMEPAGE_ROUTE)} />
             }
             <input
                 ref={inputRef}

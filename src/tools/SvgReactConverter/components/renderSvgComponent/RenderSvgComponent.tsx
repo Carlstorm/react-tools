@@ -1,6 +1,4 @@
-import React, { ForwardRefExoticComponent, Ref, forwardRef, useImperativeHandle, useRef } from 'react'
-import { VALID_ELEMENTS } from '../../resources/SvgReactConverter_valid_elements'
-import { getBounding } from '../../utility/SvgFunctions'
+import React from 'react'
 
 type DrawProps = {
     obj: any
