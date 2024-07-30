@@ -214,8 +214,6 @@ class SvgFormatHandler implements SvgFormatHandler {
         // Get all child elements of the SVG
         const childElements = svg.children
 
-        let strokeWidthAttr = svg.style['strokeWidth']
-
         // Loop through the child elements to calculate the content size
         for (let i = 0; i < childElements.length; i++) {
             const element = childElements[i]
@@ -226,22 +224,15 @@ class SvgFormatHandler implements SvgFormatHandler {
                     // If the element is a relevant type, calculate its bounding box
                     bbox = element.getBBox()
                     // Include the stroke width in the bounding box
-                    strokeWidthAttr = element.style['strokeWidth'] ? element.style['strokeWidth'] : strokeWidthAttr
-                    if (strokeWidthAttr === null) {
-                        const styleAttribute = element.getAttribute('style')
-                        if (styleAttribute != null) {
-                            const strokeWidthPattern = /stroke-width:\s*([^;]+);/
-                            const match = styleAttribute.match(strokeWidthPattern)
-                            if (match) strokeWidthAttr = match[1]
-                        }
-                    }
+                    const {strokeWidth} = getComputedStyle(element)
 
-                    if (strokeWidthAttr != null) {
-                        const strokeWidth = parseFloat(strokeWidthAttr) || 1
-                        bbox.x -= strokeWidth / 2
-                        bbox.y -= strokeWidth / 2
-                        bbox.width += 2 * (strokeWidth / 2)
-                        bbox.height += 2 * (strokeWidth / 2)
+                    if (strokeWidth && strokeWidth != "1px") {
+                        const strokeVal = strokeWidth.includes("px") ? strokeWidth.replace("px", "") : strokeWidth;
+                        const strokeValFloat = parseFloat(strokeVal) || 1
+                        bbox.x -= strokeValFloat / 2
+                        bbox.y -= strokeValFloat / 2
+                        bbox.width += 2 * (strokeValFloat / 2)
+                        bbox.height += 2 * (strokeValFloat / 2)
                     }
                 } else {
                     // For other elements, just get their bounding box
@@ -254,10 +245,6 @@ class SvgFormatHandler implements SvgFormatHandler {
                 maxY = Math.max(maxY, bbox.y + bbox.height)
             }
         }
-
-        // Calculate the width and height of the content
-        const contentWidth = maxX - minX
-        const contentHeight = maxY - minY
 
         const UpdatedSvgObjs = [...this.svgObjs]
         UpdatedSvgObjs[svgIndex].svg['$'].viewBox = [minX, minY, maxX - minX, maxY - minY].join(' ')
