@@ -19,8 +19,6 @@ const SvgReactConverter: React.FC = () => {
     useEffect(() => {
         if (svgObjs === null || svgObjs.length < 1)
             setSelected(0)
-
-        console.log(svgObjs)
     },[svgObjs])
 
     return (

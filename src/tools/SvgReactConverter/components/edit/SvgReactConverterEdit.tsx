@@ -289,6 +289,7 @@ const SvgReactConverterEdit: React.FC<EditProps> = ({ selected, svgStringHandler
     const [viewBox, setViewBox] = useState<HTMLDivElement | null>(null)
     const [viewBoxBounding, setViewBoxBounding] = useState<DOMRect | null>(null)
     const [svg, setSvg] = useState<SVGElement | null>(null)
+    const [blazor, setBlazor] = useState(false)
 
     useEffect(() => {
         if (!viewBoxRef.current || !drawSvgsRef.current) return

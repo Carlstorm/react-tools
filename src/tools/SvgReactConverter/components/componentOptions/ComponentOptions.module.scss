@@ -18,4 +18,14 @@
     color: $main-text-color-soft;
     border-bottom: solid 1px $main-background-contrast;
     padding-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.export_blazor {
+    &:hover {
+        color: $primary-color;
+        cursor: pointer;
+    }
+
 }

@@ -25,7 +25,7 @@ const BaseOptions: React.FC<BaseOptionsProps> = ({svgStringHandler, selected}) =
     return (
         <>
             <Input onInput={event.input} name="componentName" label="Component name" value={svgStringHandler.svgObjs[selected].componentName} />
-            <Input onInput={event.input} label="Svg title" name="svgTitle" value={svgStringHandler.svgObjs[selected].svgTitle} />
+            <Input onInput={event.input} disabled={svgStringHandler.svgObjs[selected].exportOptions.type == "razor"} label="Svg title" name="svgTitle" value={svgStringHandler.svgObjs[selected].exportOptions.type == "razor" ? "" : svgStringHandler.svgObjs[selected].svgTitle} />
         </>
     )
 }

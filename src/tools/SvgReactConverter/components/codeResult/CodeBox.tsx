@@ -10,7 +10,8 @@ type CodeBoxProps = {
     title: string
     svgStringHandler: SvgFormatHandler,
     selected: number,
-    content: string
+    content: string,
+    className?: string;
 }
 
 const PlainSvg = () => {
@@ -19,7 +20,7 @@ const PlainSvg = () => {
 
 
 
-const CodeBox: React.FC<CodeBoxProps> = ({title, svgStringHandler, selected, content}) => {
+const CodeBox: React.FC<CodeBoxProps> = ({title, svgStringHandler, selected, content, className}) => {
 
         
     const copyCode = () => {
@@ -27,7 +28,7 @@ const CodeBox: React.FC<CodeBoxProps> = ({title, svgStringHandler, selected, con
     }
 
     return (
-        <div className={style.CodeBox}>
+        <div className={[style.CodeBox, className].join(" ")}>
             
             <div className={style.CodeBox_title}>
                 <span>{title}</span>

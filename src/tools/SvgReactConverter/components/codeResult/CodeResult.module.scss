@@ -55,5 +55,12 @@
         padding: 24px;
         height: 100%;
         overflow: auto;
+        &>p {
+            width: max-content;
+        }
     }
+}
+
+.codeBoxLimit {
+    max-width: 60%;
 }

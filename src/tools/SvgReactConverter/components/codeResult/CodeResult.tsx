@@ -57,14 +57,46 @@ const CodeResult: React.FC<CodeResultProps> = ({ svgStringHandler, selected }) =
         });
       };
 
-    const GetComponentName = () => {
-        if (type === 'svg') return svgStringHandler.svgObjs[selected].componentName + '.svg'
-        else if (type === 'js') return svgStringHandler.svgObjs[selected].componentName + '.jsx'
-        else return svgStringHandler.svgObjs[selected].componentName + '.tsx'
+      const handleDownloadAll = () => {
+        const combinedZip = new JSZip();
+
+        svgStringHandler.svgObjs.forEach((element, i) => {
+
+            if (type === 'svg' || exportStyle === 'inline') {
+                combinedZip.file(GetComponentName(i), svgStringHandler.makeSvgString(i));
+                return
+            }
+
+            const folder = combinedZip.folder(element.componentName);
+
+            if (!folder)
+                return
+
+            // Add files to the folder
+            folder.file(GetStyleName(i), svgStringHandler.makeStyleString(i));
+            folder.file(GetComponentName(i), svgStringHandler.makeSvgString(i));
+        });
+
+        combinedZip.generateAsync({ type: 'blob' }).then(content => {
+            // Create a download link
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(content);
+            link.download = 'Svgs.zip';
+            link.click();
+          }); 
+      };
+
+    const GetComponentName = (index?: number) => {
+        const id = typeof index == "undefined" ? selected : index;
+        if (type === 'svg') return svgStringHandler.svgObjs[id].componentName + '.svg'
+        else if (type === 'js') return svgStringHandler.svgObjs[id].componentName + '.jsx'
+        else if (type === "razor") return svgStringHandler.svgObjs[id].componentName + '.razor'
+        else return svgStringHandler.svgObjs[id].componentName + '.tsx'
     }
 
-    const GetStyleName = () => {
-        let styleName = svgStringHandler.svgObjs[selected].componentName
+    const GetStyleName = (index?: number) => {
+        const id = typeof index == "undefined" ? selected : index;
+        let styleName = svgStringHandler.svgObjs[id].componentName
         if (exportStyle === "module") {
             styleName += ".module"            
         }
@@ -82,15 +114,23 @@ const CodeResult: React.FC<CodeResultProps> = ({ svgStringHandler, selected }) =
     return (
         <div className={style.component}>
             <div className={style.component_code}>
-                <CodeBox svgStringHandler={svgStringHandler} content={svgStringHandler.makeSvgString(selected)} selected={selected} title={GetComponentName()} />
-                {type === 'svg' || exportStyle === 'inline' ? null : (
+                <CodeBox 
+                    svgStringHandler={svgStringHandler} 
+                    content={svgStringHandler.makeSvgString(selected)} 
+                    selected={selected} title={GetComponentName()} 
+                    className={type === 'svg' || exportStyle === 'inline' ? "" : style.codeBoxLimit}
+                />
+                {type === 'svg' || exportStyle === 'inline' || exportStyle === 'params' ? null : (
                     <>
                         <div className={style.code_split}></div>
                         <CodeBox svgStringHandler={svgStringHandler} content={svgStringHandler.makeStyleString(selected)} selected={selected} title={GetStyleName()} />
                     </>
                 )}
             </div>
-            <Button title='Download' className={style.component_download} onClick={() => handleDownload()}/>
+            <div style={{display: "flex", gap: "8px"}}>
+                <Button title='Download' className={style.component_download} onClick={() => handleDownload()}/>
+                <Button title='Download All' className={style.component_download} onClick={() => handleDownloadAll()}/>
+            </div>
         </div>
     )
 }

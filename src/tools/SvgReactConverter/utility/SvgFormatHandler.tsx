@@ -506,13 +506,48 @@ class SvgFormatHandler implements SvgFormatHandler {
         return reactRefHtmlString
     }
 
+    htmlToRazor(htmlString: string) {
+
+        // Regular expression to find style attributes
+        const styleRegex = /style="(.*?)"/g
+
+        const attrRegex = /(\w+):(\w+)=/g
+
+        // Replace style attributes with React style objects
+        let reactHtmlString = htmlString.replace(styleRegex, (_, styles) => {
+            // Convert styles to object
+            const styleObj: { [key: string]: string } = {}
+            styles.split(';').forEach((style: string) => {
+                const [key, value] = style.split(':').map((s) => s.trim())
+                if (key && value) {
+                    styleObj[key] = value
+                }
+            })
+            return `style={${JSON.stringify(styleObj)}}`
+        })
+
+        // Replace other attributes that need conversion
+        reactHtmlString = reactHtmlString.replace(attrRegex, (_, prefix, attr) => {
+            const camelCaseAttr = prefix + attr.charAt(0).toUpperCase() + attr.slice(1)
+            return `${camelCaseAttr}=`
+        })
+
+        const da1 = reactHtmlString.replace(/fillPlaceHolder="fillPlaceHolder"/g, 'fill="@Fill"')
+        const da2 = da1.replace(/strokePlaceHolder="strokePlaceHolder"/g, 'stroke="@Stroke"')
+        const da3 = da2.replace(/stylePlaceHolder="stylePlaceHolder"/g, 'style="@SizeStyle @Style"')
+        const da4 = da3.replace(/clickEvPlaceHolder="clickEvPlaceHolder"/g, '@onclick="@OnClick"')
+        return da4
+    }
+
+
     makeSvgString(selected: number) {
         const type = this.svgObjs[selected].exportOptions.type
         const style = this.svgObjs[selected].exportOptions.style
 
-        console.log(type)
         if (type === "svg")
             return this.createSvgHtml(selected, type, style)
+        else if (type === "razor")
+            return this.createSvgRazor(selected, type, style)
         else
             return this.createSvgReact(selected, type, style)
     }
@@ -551,12 +586,99 @@ class SvgFormatHandler implements SvgFormatHandler {
         const indentedStyleEndTag = `\n${indent}</style>`
 
         // Replace original CSS with formatted CSS
-        const finalSvgString =
+        let finalSvgString =
             formattedSvgString.substring(0, styleStartIndex) + '\n' + formattedCssString + indentedStyleEndTag + formattedSvgString.substring(styleEndIndex)
 
-        return `<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-${finalSvgString}
-        `
+        finalSvgString = finalSvgString.replace(/"([^"]*)"/g, function(match, p1) {
+            return '"' + p1.replace(/[ \t]+/g, ' ') + '"';
+        });
+        return `<?xml version="1.0" encoding="UTF-8" standalone="no"?> ${finalSvgString}`
+    }
+
+    createSvgRazor(selected: number, type: string, style: string) {
+        const obj = this.svgObjs[selected].svg
+        const title = this.svgObjs[selected].svgTitle
+
+        const svgString = ReactDOMServer.renderToStaticMarkup(<RenderSvgComponent style={style} title={title} obj={obj} type={type} />)
+
+        const moduleIfyClassNames = (content: string) => {
+            return content.replace(/className="(.*?)"/g, (match, className) => {
+                const classNameSplit = className.split("_")
+                const classNameNumber = classNameSplit[classNameSplit.length-1]
+                return `className={style._${classNameNumber}}`;
+            });
+        }
+
+        const reactifiedSvgString = this.htmlToRazor(svgString)
+        const formattedSvgString = beautifyHtml(reactifiedSvgString, {
+            indent_size: 1,
+            indent_level: 0,
+            indent_with_tabs: true,
+            wrap_line_length: 30,
+            wrap_attributes: 'force-expand-multiline'
+        })
+
+        let actualFinalString = ""
+
+        if (style === "inline" || style === "params") {
+            // Extract CSS from the formatted SVG
+            const styleStartIndex = formattedSvgString.indexOf('<style>') + '<style>'.length
+            const styleEndIndex = formattedSvgString.indexOf('</style>') + '</style>'.length
+            const cssString = formattedSvgString.substring(styleStartIndex, styleEndIndex).replace('</style>', '')
+
+            // Format CSS separately (You can use any CSS formatter here)
+            const formattedCssString = css_beautify(cssString, {
+                indent_size: 1,
+                indent_level: 2,
+                indent_with_tabs: true,
+                selector_separator_newline: true,
+                newline_between_rules: true,
+                space_around_selector_separator: true
+            })
+
+            const formattedCssStringWithCssVal = () => {
+                return formattedCssString.replace(/(fill|stroke):\s*([^;]+);/gi, (match, p1, p2) => {
+                  if (p2.trim().toLowerCase() === 'none' || p2.trim().toLowerCase() === 'transparent') {
+                    return match;
+                  }
+                  return `${p1}: var(--svg-color);`;
+                });
+              }
+
+            // Adjust indentation for </style>
+            const indentLevel = 1 // or any other appropriate indent level
+            const indent = '\t'.repeat(indentLevel)
+            const indentedStyleEndTag = `\n${indent}</style>\n`
+
+            const titleLogicString = `\n${'\t'.repeat(1)}@if (Title is not null) 
+${'\t'.repeat(1)}{
+${'\t'.repeat(2)}<title>@Title</title>
+${'\t'.repeat(1)}}\n`
+            // Replace original CSS with formatted CSS
+            const finalSvgString =
+                formattedSvgString.substring(0, styleStartIndex) + '\n' + formattedCssStringWithCssVal() + indentedStyleEndTag + titleLogicString + formattedSvgString.substring(styleEndIndex)
+
+            const styleElementToString = finalSvgString.replace('<style>', '<style>')
+            actualFinalString = styleElementToString.replace('</style>', '</style>')
+        } else if (style === "module") {
+            actualFinalString = moduleIfyClassNames(formattedSvgString)
+        } else 
+            actualFinalString = formattedSvgString
+
+        // remove tab spaces inside props ("")
+        actualFinalString = actualFinalString.replace(/"([^"]*)"/g, function(match, p1) {
+            return '"' + p1.replace(/[ \t]+/g, ' ') + '"';
+        });
+
+        actualFinalString = actualFinalString.replace(/"([^"]*?)\s*"/g, function(match, p1) {
+            return '"' + p1.trim() + '"';
+        });
+
+        const htmlString = `@namespace ${this.svgObjs[selected].exportOptions.namespace}
+@inherits ${this.svgObjs[selected].exportOptions.inherits}
+
+${actualFinalString}`
+        return htmlString
     }
 
     createSvgReact(selected: number, type: string, style: string) {
@@ -578,7 +700,7 @@ ${finalSvgString}
             indent_size: 1,
             indent_level: 2,
             indent_with_tabs: true,
-            wrap_line_length: 60,
+            wrap_line_length: 30,
             wrap_attributes: 'force-expand-multiline'
         })
 
@@ -602,7 +724,7 @@ ${finalSvgString}
 
             // Adjust indentation for </style>
             const indentLevel = 3 // or any other appropriate indent level
-            const indent = ' '.repeat(indentLevel * 4)
+            const indent = '\t'.repeat(indentLevel)
             const indentedStyleEndTag = `\n${indent}</style>\n`
 
             // Replace original CSS with formatted CSS
@@ -616,7 +738,15 @@ ${finalSvgString}
         } else 
             actualFinalString = formattedSvgString
 
-            
+        // remove tab spaces inside props ("")
+        actualFinalString = actualFinalString.replace(/"([^"]*)"/g, function(match, p1) {
+            return '"' + p1.replace(/[ \t]+/g, ' ') + '"';
+        });
+        // // fix wierd encoded spaces error things
+        actualFinalString = actualFinalString.replace(/"([^"]*?)\s*"/g, function(match, p1) {
+            return '"' + p1.trim() + '"';
+        });
+        
         if (type === "ts")
             return this.makeTsString(actualFinalString, selected)
         else (type === "js")
@@ -645,7 +775,7 @@ ${finalSvgString}
 
 
         const style = this.svgObjs[selected].exportOptions.style
-        if (style === "inline")
+        if (style === "inline" || style === "params")
             return ""
         else if (style === "module")
             return `import style from './${GetStyleName()}'\n`
